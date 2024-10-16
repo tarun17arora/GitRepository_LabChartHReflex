@@ -253,10 +253,11 @@ def plotAndExtract(filename, sampRate, preTime, postTime, avgFact = 0):
 ################################################################################################
 ## starting another function here - backRMS ##
 ################################################################################################
-def backRMS(indEpoch, RMS_Signal_StartTime_ms, RMS_Signal_EndTime_ms, samp_rate, pre_time_ms):
+def backRMS(indEpoch, RMS_Signal_StartTime_ms, RMS_Signal_EndTime_ms, RMS_samp_rate, RMS_pre_time_ms):
     
     # assuming the user wants to calculate background rms of the signal ranging from...
     # RMS_Signal_StartTime_ms (e.g., 55ms) to the RMS_Signal_EndTime_ms (5 ms) where 0 is the electrical stimulus 
+    # NOTE: no need to add a negative sign to the start or end time as it automatically assumes it occurs before 0ms mark
 
     import numpy as np 
     
