@@ -82,7 +82,7 @@ def get_page_info(com, samp_rate, pre_time_ms, post_time_ms):
 ################################################################################################
 ## starting another function here - markPages ##
 ################################################################################################
-
+# recent change 22-10-2024 - line 118 commented
 def mark_pages(filename,samp_rate, pre_time_ms, post_time_ms):
 # markPages labels the entire data with page information
 # note: this function will add another column to the imported data with the channel
@@ -115,7 +115,7 @@ def mark_pages(filename,samp_rate, pre_time_ms, post_time_ms):
 
         # determining the "number of the pages" and "data point in each page" within the current block
         pages_in_block = pages_info_for_block.shape[0] #determining the number of pages within this block
-        block_data_length = len(data_for_block[block_no])  # determing the number of datapoints in each channel for this block 
+        #block_data_length = len(data_for_block[block_no-1])  # determing the number of datapoints in each channel for this block # recent change 22-10-2024
 
         # creating a zero matrix of size of block length
         pagelabel_shape = np.shape(data_for_block[0]) #note: specifying the shape of the ndarray to be created 
@@ -142,7 +142,6 @@ def mark_pages(filename,samp_rate, pre_time_ms, post_time_ms):
 ################################################################################################
 ## starting another function here - getPagesData ##
 ################################################################################################
-
 
 def get_pages_data(filename, samp_rate, pre_time_ms, post_time_ms, avgFact = 0):
     # getPagesData will obtain LabChart pages in a cell #
@@ -172,7 +171,7 @@ def get_pages_data(filename, samp_rate, pre_time_ms, post_time_ms, avgFact = 0):
         a1 = 0
         diff = avgFact
         noLots = int(len(pages) / avgFact) # this gives number of resulting pages after averaging
-        chNos = len(pages[0]) # this gives number of channels in the first page - should be common to all pages
+        chNos = len(pages[0]) # this gives number of channels in the first page - should be common to all pages 
         new_lotArray = []
         for lotNo in range(1,noLots+1): #double check +1 correction
             st_ind = a1 + (lotNo - 1)*diff #using arithmetic mean
@@ -261,11 +260,11 @@ def backRMS(indEpoch, RMS_Signal_StartTime_ms, RMS_Signal_EndTime_ms, RMS_samp_r
 
     import numpy as np 
     
-    RMS_startTime = pre_time_ms - RMS_Signal_StartTime_ms
-    RMS_startPoint = int(RMS_startTime * samp_rate/1000)
+    RMS_startTime = RMS_pre_time_ms - RMS_Signal_StartTime_ms
+    RMS_startPoint = int(RMS_startTime * RMS_samp_rate/1000)
     
-    RMS_endTime = pre_time_ms - RMS_Signal_EndTime_ms
-    RMS_endPoint = int(RMS_endTime * samp_rate/1000)
+    RMS_endTime = RMS_pre_time_ms - RMS_Signal_EndTime_ms
+    RMS_endPoint = int(RMS_endTime * RMS_samp_rate/1000)
     
     RMS_signal = indEpoch[RMS_startPoint:RMS_endPoint]
        
@@ -384,7 +383,7 @@ def autoEventDetection(indEpoch, backgroundEMG, samp_rate, pre_time_ms = 50, onT
 ## starting another function here - manual event detection
 ################################################################################################
 
-def manualEventDetect(indEpoch, pre_time_ms, samp_rate, hOnset_ms, mOnset_ms, rangeTime_ms):
+def manualEventDetect(indEpoch, pre_time_ms, samp_rate, hOnset_ms, mOnset_ms, hrangeTime_ms,mrangeTime_ms):
     
     # indEpoch: emg epoch of the signal to be evaluated
     # hOnset_ms: expected onset of H-wave in ms
@@ -395,8 +394,8 @@ def manualEventDetect(indEpoch, pre_time_ms, samp_rate, hOnset_ms, mOnset_ms, ra
 
     import numpy as np
 
-    hRange_ms = np.array([hOnset_ms, hOnset_ms+rangeTime_ms]) + pre_time_ms
-    mRange_ms = np.array([mOnset_ms, mOnset_ms+rangeTime_ms]) + pre_time_ms
+    hRange_ms = np.array([hOnset_ms, hOnset_ms+hrangeTime_ms]) + pre_time_ms
+    mRange_ms = np.array([mOnset_ms, mOnset_ms+mrangeTime_ms]) + pre_time_ms
 
     hRange_points = (hRange_ms*samp_rate//1000)
     mRange_points = (mRange_ms*samp_rate//1000)
